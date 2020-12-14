@@ -20,6 +20,7 @@ public:
 public slots:
     void downloadProgress(float);
     void downloadFinished();
+    void assetFinished();
 
 private:
     Ui::DownloadWidget *ui;

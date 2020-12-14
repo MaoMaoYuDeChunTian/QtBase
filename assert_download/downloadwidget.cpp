@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 #include <QMessageBox>
+#include <QDir>
 
 DownloadWidget::DownloadWidget(QWidget *parent) :
     QWidget(parent),
@@ -13,6 +14,7 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
     ui->setupUi(this);
 
     m_server = new DownloadServer();
+    connect(m_server, &DownloadServer::sigAssetsFinished, this, &DownloadWidget::assetFinished);
     connect(m_server, &DownloadServer::sigHandleFinished, this, &DownloadWidget::downloadFinished);
     connect(m_server, &DownloadServer::sigProcessUpdate, this, &DownloadWidget::downloadProgress);
 }
@@ -33,23 +35,69 @@ void DownloadWidget::downloadProgress(float value)
 void DownloadWidget::downloadFinished()
 {
     ui->label->setText("解压中..");
-    m_process = new QProcess(this);
-    QString _exePath = QCoreApplication::applicationDirPath()+"/bandizip/Bandizip.exe";
-    QString _zipPath = m_server->GetSaveFilePath();
+
     QString _assetDir = QCoreApplication::applicationDirPath() + "/data";
+    QDir _dir(_assetDir+"/assets");
+    if(_dir.exists())
+        _dir.removeRecursively();
+
+    m_process = new QProcess(this);
+    QString _exePath = QCoreApplication::applicationDirPath()+"/bandizip/bz.exe";
+    QString _zipPath = m_server->GetAssetsFilePath();
+
     QString _cmd = _exePath + " x -o:" + _assetDir + " " + _zipPath;
+    //QString _cmd = _exePath + " c " + _zipPath + " " + _assetDir;
     m_process->start(_cmd);
 
     if(!m_process->waitForStarted(3000))
     {
-        QMessageBox::warning(this,"警告","解压程序启动失败");
+        //QMessageBox::warning(this,"警告","解压程序启动失败");
     }
 
-    if(!m_process->waitForFinished(300000))
+    if(!m_process->waitForFinished(6000000))
     {
-        QMessageBox::warning(this,"警告","解压失败");
+        this->hide();
+        //QMessageBox::warning(this,"警告","解压失败");
     }
+    else
+    {
+        this->hide();
+    }
+
+
+    QFile::remove(_zipPath);
+
+
+    _dir.setPath(_assetDir+"/import");
+    if(_dir.exists())
+        _dir.removeRecursively();
+
+    _zipPath = m_server->GetSaveFilePath();
+
+    _cmd = _exePath + " x -o:" + _assetDir + " " + _zipPath;
+    m_process->start(_cmd);
+
+    if(!m_process->waitForStarted(3000))
+    {
+        //QMessageBox::warning(this,"警告","解压程序启动失败");
+    }
+
+    if(!m_process->waitForFinished(6000000))
+    {
+        this->hide();
+        //QMessageBox::warning(this,"警告","解压失败");
+    }
+    else
+    {
+        this->hide();
+    }
+
 
     QFile::remove(_zipPath);
     this->close();
+}
+
+void DownloadWidget::assetFinished()
+{
+    ui->label->setText("下载工业数据..");
 }
