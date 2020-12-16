@@ -18,14 +18,20 @@ public:
     ~DownloadWidget();
 
 public slots:
-    void downloadProgress(float);
-    void downloadFinished();
-    void assetFinished();
+    void downloadAssetsProgress(float);
+    void downloadImportProgress(float);
+    void downloadAssetsFinished();
+    void downloadImportFinished();
+
+private:
+    void unpressed(const QString& zip, const QString& unpressDir);
 
 private:
     Ui::DownloadWidget *ui;
-    DownloadServer* m_server;
+    DownloadServer* m_assetServer;
+    DownloadServer* m_importServer;
     QProcess* m_process;
+    QString m_7zPath;
 };
 
 #endif // DOWNLOADWIDGET_H

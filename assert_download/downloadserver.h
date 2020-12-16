@@ -12,31 +12,27 @@ class DownloadServer : public QObject
 public:
     DownloadServer();
 
-    void RequestData(QUrl url);
-    void downloadFileAsync(QUrl url);
-    QString GetSaveFilePath()const;
-    QString GetAssetsFilePath()const;
+    void downloadFileAsync(QUrl url, const QString& savePath);
+    QString getSavePath() const;
 
 public slots:
     void onHttpFinished();
     void onHttpReadyRead();
     void OnReplyProgress(qint64 bytesRead, qint64 totalBytes);
-    void onImportFinished();
 
 signals:
-    void sigAssetsFinished();
     void sigHandleFinished();
     void sigProcessUpdate(float);
 
 protected:
     QFile *openFileForWrite(const QString &fileName);
+    void RequestData(QUrl url);
 
 private:
     QNetworkAccessManager m_manager;
     QNetworkReply*m_reply;
     QFile* m_file;
     QString m_saveFilePath;
-    QString m_assetFilePath;
 };
 
 #endif // DOWNLOADSERVER_H
