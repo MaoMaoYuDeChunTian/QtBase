@@ -45,7 +45,7 @@ void DownloadWidget::downloadFinished()
     QString _exePath = QCoreApplication::applicationDirPath()+"/bandizip/bz.exe";
     QString _zipPath = m_server->GetAssetsFilePath();
 
-    QString _cmd = _exePath + " x -o:" + _assetDir + " " + _zipPath;
+    QString _cmd = "\"" + _exePath + "\"" + " x -o:" + "\"" +_assetDir + "\"" + " " + "\"" +_zipPath + "\"";
     //QString _cmd = _exePath + " c " + _zipPath + " " + _assetDir;
     m_process->start(_cmd);
 
@@ -74,7 +74,7 @@ void DownloadWidget::downloadFinished()
 
     _zipPath = m_server->GetSaveFilePath();
 
-    _cmd = _exePath + " x -o:" + _assetDir + " " + _zipPath;
+    _cmd = "\"" + _exePath + "\"" + " x -o:" + "\"" +_assetDir + "\"" + " " + "\"" +_zipPath + "\"";
     m_process->start(_cmd);
 
     if(!m_process->waitForStarted(3000))
