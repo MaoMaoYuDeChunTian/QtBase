@@ -29,7 +29,7 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
 #endif
 
 #ifdef Q_OS_MAC
-    m_7zPath = QCoreApplication::applicationDirPath()+"/7z.exe";
+    m_7zPath = QCoreApplication::applicationDirPath()+"/7z_mac";
     downloadDirPath = QDir::homePath();
 #endif
 
@@ -43,14 +43,14 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
 
 
 
-//    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi.7z"),downloadDirPath+"/ceshi.7z");
-//    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi1.7z"),downloadDirPath+"/ceshi1.7z");
+    //    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi.7z"),downloadDirPath+"/ceshi.7z");
+    //    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi1.7z"),downloadDirPath+"/ceshi1.7z");
 
     m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/assets.7z"),downloadDirPath+"/assets.7z");
     m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/import.7z"),downloadDirPath+"/import.7z");
 
-//    m_assetServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/assets.7z"),downloadDirPath+"/assets.7z");
-//    m_importServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/import.7z"),downloadDirPath+"/import.7z");
+    //    m_assetServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/assets.7z"),downloadDirPath+"/assets.7z");
+    //    m_importServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/import.7z"),downloadDirPath+"/import.7z");
 }
 
 DownloadWidget::~DownloadWidget()
@@ -76,34 +76,28 @@ void DownloadWidget::downloadImportProgress(float value)
 
 void DownloadWidget::downloadAssetsFinished()
 {
-    unpressed(m_assetServer->getSavePath(),QCoreApplication::applicationDirPath() + "/data/assets");
+    QString _dirPaht = QCoreApplication::applicationDirPath();
+#ifdef Q_OS_MAC
+    QDir dir(_dirPaht);
+    dir.cdUp();
+    dir.cdUp();
+    _dirPaht = dir.path();
+#endif
 
-    ++count;
-    if(count == 2){
-        if(!isDirExist(QCoreApplication::applicationDirPath() + "/data/assets"))
-        {
-            this->hide();
-            QMessageBox::warning(this,"警告","assets资源解压失败，没有权限，请尝试以管理员权限运行程序");
-        }
-
-        this->close();
-    }
+    unpressed(m_assetServer->getSavePath(),_dirPaht + "/data/assets");
 }
 
 void DownloadWidget::downloadImportFinished()
 {
+    QString _dirPaht = QCoreApplication::applicationDirPath();
+#ifdef Q_OS_MAC
+    QDir dir(_dirPaht);
+    dir.cdUp();
+    dir.cdUp();
+    _dirPaht = dir.path();
+#endif
+
     unpressed(m_importServer->getSavePath(),QCoreApplication::applicationDirPath() + "/data/import");
-
-    ++count;
-    if(count == 2){
-        if(!isDirExist(QCoreApplication::applicationDirPath() + "/data/import"))
-        {
-            this->hide();
-            QMessageBox::warning(this,"警告","import资源解压失败，没有权限，请尝试以管理员权限运行程序");
-        }
-
-        this->close();
-    }
 }
 
 void DownloadWidget::unpressed(const QString &zip, const QString &unpressDir)
@@ -117,11 +111,21 @@ void DownloadWidget::unpressed(const QString &zip, const QString &unpressDir)
     m_process = new QProcess(this);
     m_process->start(_cmd);
 
-    if(m_process->waitForStarted(3000))
+    m_process->waitForStarted(3000);
+    m_process->waitForFinished(6000000);
 
-        if(m_process->waitForFinished(6000000))
+    QFile::remove(zip);
 
-            QFile::remove(zip);
+    ++count;
+    if(count == 2){
+        if(!isDirExist(QCoreApplication::applicationDirPath() + "/data/import"))
+        {
+            this->hide();
+            QMessageBox::warning(this,"警告","import资源解压失败，没有权限，请尝试以管理员权限运行程序");
+        }
+
+        this->close();
+    }
 }
 
 bool DownloadWidget::isDirExist(const QString &dirPath)
