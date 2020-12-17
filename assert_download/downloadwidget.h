@@ -25,6 +25,7 @@ public slots:
 
 private:
     void unpressed(const QString& zip, const QString& unpressDir);
+    bool isDirExist(const QString& dirPath);
 
 private:
     Ui::DownloadWidget *ui;
