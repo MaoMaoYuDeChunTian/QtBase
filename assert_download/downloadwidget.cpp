@@ -22,11 +22,12 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
     connect(m_importServer, &DownloadServer::sigProcessUpdate, this, &DownloadWidget::downloadImportProgress);
 
     m_7zPath = QCoreApplication::applicationDirPath()+"/7z.exe";
-//    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi.zip")
+//  m_7zPath = QCoreApplication::applicationDirPath()+"/bandizip/bz.exe";
+
+//    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/assets.zip")
 //                                     ,QDir::homePath()+"/AppData/Roaming/Ideavr/assets.zip");
-//    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi1.zip")
+//    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/import.zip")
 //                                      ,QDir::homePath()+"/AppData/Roaming/Ideavr/import.zip");
-//    m_7zPath = QCoreApplication::applicationDirPath()+"/bandizip/bz.exe";
     m_assetServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/assets.zip")
                                      ,QDir::homePath()+"/AppData/Roaming/Ideavr/assets.zip");
     m_importServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/import.zip")
