@@ -34,24 +34,23 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
 #endif
 
 #ifdef Q_OS_LINUX
-    m_7zPath = QCoreApplication::applicationDirPath()+"/7z.exe";
+    m_7zPath = QCoreApplication::applicationDirPath()+"/7z";
     downloadDirPath = QDir::homePath();
 #endif
-
 
 
     //  m_7zPath = QCoreApplication::applicationDirPath()+"/bandizip/bz.exe";
 
 
 
-    //    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi.zip"),downloadDirPath+"/assets.zip");
-    //    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi1.zip"),downloadDirPath+"/import.zip");
+//    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi.7z"),downloadDirPath+"/ceshi.7z");
+//    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/ceshi1.7z"),downloadDirPath+"/ceshi1.7z");
 
-    //    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/assets.zip"),downloadDirPath+"/assets.zip");
-    //    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/import.zip"),downloadDirPath+"/import.zip");
+    m_assetServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/assets.7z"),downloadDirPath+"/assets.7z");
+    m_importServer->downloadFileAsync(QUrl("http://ideavr.top/download/avatar-assets/import.7z"),downloadDirPath+"/import.7z");
 
-    m_assetServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/assets.zip"),downloadDirPath+"/assets.zip");
-    m_importServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/import.zip"),downloadDirPath+"/import.zip");
+//    m_assetServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/assets.7z"),downloadDirPath+"/assets.7z");
+//    m_importServer->downloadFileAsync(QUrl("http://gdi-update.obs.cn-east-2.myhuaweicloud.com/avatar_asset/import.7z"),downloadDirPath+"/import.7z");
 }
 
 DownloadWidget::~DownloadWidget()
