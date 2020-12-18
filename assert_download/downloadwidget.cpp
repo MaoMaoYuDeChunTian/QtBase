@@ -29,11 +29,7 @@ DownloadWidget::DownloadWidget(QWidget *parent) :
 #endif
 
 #ifdef Q_OS_MAC
-    QDir dir(QCoreApplication::applicationDirPath());
-    dir.cdUp();
-    dir.cdUp();
-    dir.cdUp();
-    m_7zPath = dir.path()+"/7z_mac";
+    m_7zPath = QCoreApplication::applicationDirPath()+"/7z_mac";
     downloadDirPath = QDir::homePath();
 #endif
 
@@ -81,28 +77,12 @@ void DownloadWidget::downloadImportProgress(float value)
 void DownloadWidget::downloadAssetsFinished()
 {
     QString _dirPaht = QCoreApplication::applicationDirPath();
-#ifdef Q_OS_MAC
-    QDir dir(_dirPaht);
-    dir.cdUp();
-    dir.cdUp();
-    dir.cdUp();
-    _dirPaht = dir.path();
-#endif
-
     unpressed(m_assetServer->getSavePath(),_dirPaht + "/data/assets");
 }
 
 void DownloadWidget::downloadImportFinished()
 {
     QString _dirPaht = QCoreApplication::applicationDirPath();
-#ifdef Q_OS_MAC
-    QDir dir(_dirPaht);
-    dir.cdUp();
-    dir.cdUp();
-    dir.cdUp();
-    _dirPaht = dir.path();
-#endif
-
     unpressed(m_importServer->getSavePath(),_dirPaht+ "/data/import");
 }
 
@@ -114,6 +94,7 @@ void DownloadWidget::unpressed(const QString &zip, const QString &unpressDir)
 
     QString _cmd = "\"" + m_7zPath + "\"" + " x " + "\"" +zip + "\"" + " -o\"" + unpressDir + "\"";
     // QString _cmd = "\"" + m_7zPath + "\"" + " x -o:" + "\"" +unpressDir + "\"" + " " + "\"" +zip + "\"";
+    QMessageBox::warning(this,"cmd",_cmd);
     m_process = new QProcess(this);
     m_process->start(_cmd);
 
